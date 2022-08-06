@@ -1,0 +1,367 @@
+<html>
+
+<head>
+	<meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Obby Game</title>
+</head>
+    
+<style>
+	body {
+		overscroll-behavior: contain
+	}
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    .webgl {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+    
+    button {
+        position: fixed;
+        bottom: 5%;
+        right: 5%;
+        width: 10%;
+        height: 10%;
+        font-size: 200%;
+        user-select: none;
+    }
+    
+    p {
+        font-size: 200%;
+        color: white;
+        font-family: sans-serif;
+    }
+    
+    #labels {
+        position: fixed;
+        top: 5%;
+        left: 5%;
+    }
+    
+    #ikot {
+    	position: fixed;
+    	bottom: 5%;
+    	left: 3%;
+    	width: 7%;
+    	height: 10%;
+    	font-size: 200%;
+    }
+    #screen {
+    	position: absolute;
+    	width: 100%;
+    	height: 100%;
+    	background: rgba(0, 0, 0, 0);
+    }
+</style>
+    
+<body>
+    <canvas class="webgl"></canvas>
+    <div id="screen"></div>
+    <div id="labels">
+        <p id="label1">Label 1</p>
+        <p id="label2">Label 2</p>
+        <p id="label3">Label 3</p>
+        <p id="label4">Label 4</p>
+        <p id="label5">Label 5</p>
+    </div>
+    
+    <button id="rotate">Rotate Player</button>
+    <button id="ikot">Ikot</button>
+
+<!--Script below holds 3d responsibility. Don't remove. Important!-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  
+<!--Script Controller: Desktop Version-->
+<script>
+    
+    var e = 0;
+    var cameraRY = 0;
+    var cameraPY = 0;
+    var gravity = 0;
+    var cameraRX = 0;
+    
+    var wee = 1;
+    
+    document.getElementById("rotate").onmousedown = function() {
+        e = 1;
+    }
+    document.getElementById("rotate").onmouseup = function() {
+        e = 0;
+    }
+   /* 
+    document.onkeydown = keyBaba;
+    document.onkeyup = keyTaas;
+    
+    
+    function keyBaba(e) {
+        if (e.keyCode == 38) {
+            cameraRX += 0.01;
+        }
+        else if (e.keyCode == 40) {
+            cameraRX -= 0.01
+        };
+        if (e.keyCode == "72") {
+            wee = 1
+        };
+    }
+    */
+    /*
+    function keyTaas(e) {
+        if (e.keyCode == "72") {
+            wee = 0
+        }
+    }
+    */
+    function labels() {
+        requestAnimationFrame(labels);
+        document.getElementById("label1").innerHTML = Math.round(cameraRX) + ", " + Math.round(cameraRY);
+    }
+    labels();
+    
+    
+    
+    function animations() {
+        requestAnimationFrame(animations);
+        /*
+        if (e == 1) {
+            cameraRY += 0.01;
+        }
+        else {
+            cameraRY += 0;
+        };
+        if (mob1 == 1) {
+        	cameraRY +=  0.01;
+        }
+        else {
+        	cameraRY += 0;
+        };*/
+        camera.rotation.y = cameraRY;
+        camera.position.y = cameraPY;
+        camera.rotation.x = cameraRX;
+        
+        gravity -= 0.000;
+        cameraPY += gravity;
+        /**/renderer.render(scene, camera)
+    }
+    animations();
+    
+</script>    
+    
+    
+<!--Script Controller: Mobile Version-->
+<script>
+
+	var body = document.querySelector("body");
+    var mouseX = 0;
+    var mouseY = 0;
+    body.onmousemove = function(event) {
+        mouseX = event.clientX;
+        document.getElementById("label4").innerHTML = mouseX;
+    };
+    var screen = document.getElementById("screen");
+    var startX, startY, moveX, moveY, msX, msY;
+    var mapX = 0
+    var mapY = 0;
+    
+    screen.ontouchstart = function(event) {
+    startX = Math.round(event.touches[0].clientX);
+    startY = Math.round(event.touches[0].clientY);
+    document.getElementById("label2").innerHTML = 12;
+    }
+    
+    screen.ontouchmove = function(event) {
+    document.getElementById("label2").innerHTML = "moving";
+    moveX = Math.round(event.touches[0].clientX);
+    moveY = Math.round(event.touches[0].clientY);
+    msX = (moveX - startX)/500;
+    msY = (moveY - startY)/500;
+    cameraRY = mapX + msX;
+    cameraRX = mapY + msY;
+    }
+    
+    screen.ontouchend = function() {
+    mapX = cameraRY;
+    mapY = cameraRX;
+    }
+    
+
+    var num1 = 0.017453;
+    var num2 = 0
+    var box1RZ = num1*num2;
+    var gyu = 0;
+    document.getElementById("ikot").ontouchstart = function() {
+    	gyu = 1;
+    }
+    document.getElementById("ikot").ontouchend = function() {
+    	gyu = 0;
+    };
+    document.getElementById("ikot").onmousedown = function() {
+    	gyu = 1;
+    }
+    document.getElementById("ikot").onmouseup = function() {
+    	gyu = 0;
+    }
+    
+    function thirdLabel() {
+    	requestAnimationFrame(thirdLabel);
+    	document.getElementById("label3").innerHTML = num2 + "°";
+    	num2 += gyu;
+    	box1RZ = num1*num2;
+    }
+    thirdLabel();
+    
+</script>
+    
+    
+<!--Script below serves as 3d intended contents foundation. Don't remove!-->
+<script>
+    
+    /**/var scene = new THREE.Scene();
+    scene.background = new THREE.Color("lightskyblue");
+    
+    /**/var sizes = {
+        width: window.innerWidth,
+        height: window.innerHeight
+    }
+    
+    /**/var canvas = document.querySelector(".webgl");
+    /**/var renderer = new THREE.WebGLRenderer({
+        canvas: canvas
+    });
+    
+    var camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
+    camera.position.z = 0
+    camera.position.y = cameraPY;
+    camera.rotation.x = cameraRX;
+    camera.rotation.y = cameraRY;
+    scene.add(camera)
+    
+    var directionalLight = new THREE.DirectionalLight('#ffffff', 10)
+    directionalLight.position.set(0.25, 3, 2)
+    scene.add(directionalLight)
+    
+    /*Geometries*/
+    var worldG = new THREE.BoxGeometry(20, 20);
+    var cubeG = new THREE.BoxGeometry(5, 5, 5);
+    var sphereG = new THREE.SphereGeometry(7,7,7);
+    var cutesG = new THREE.BoxGeometry(3, 3, 3);
+    var landG = new THREE.PlaneGeometry(10, 10);
+    var boxG = new THREE.BoxGeometry(2,2,2);
+    
+    /*Materials*/
+    
+    var worldM = new THREE.MeshStandardMaterial({ color: 'green' })
+    worldM.opacity = 1;
+    worldM.transparent = true;
+    var cubeM = new THREE.MeshStandardMaterial({ color: "white "})
+    var cutesM = new THREE.MeshStandardMaterial({ color: "yellow" })
+    var landM = new THREE.MeshStandardMaterial({ color: "blue" })
+    
+    /*Objects*/
+    
+        /*World*/
+        var world1 = new THREE.Mesh(worldG, worldM);
+        world1.position.z = -20;
+        world1.rotation.y = 0;
+        //scene.add(world1);
+    
+        var world2 = new THREE.Mesh(worldG, worldM);
+        world2.position.z = 20;
+        //scene.add(world2);
+    
+    var cube1 = new THREE.Mesh(cubeG, cubeM);
+    cube1.position.z = -12;
+    cube1.rotation.x = 2;
+    cube1.rotation.z = 1;
+    
+    var cube2 = new THREE.Mesh(cubeG, cubeM);
+    cube2.position.z = -12;
+    cube2.position.x = 7;
+    cube2.rotation.z = 1;
+    
+    var sphere1 = new THREE.Mesh(sphereG, cubeM);
+    sphere1.position.z = -30;
+    sphere1.position.y = 10;
+    sphere1.position.x = -20;
+    sphere1.rotation.z = 1;
+    
+    var cutes = new THREE.Mesh(cutesG, cutesM);
+    cutes.position.z = -5;
+    cutes.position.y = -5;
+    cutes.position.x = 10;
+        var cutesRY = 1;
+        
+    var land = new THREE.Mesh(landG, landM);
+    land.position.z = -10;
+    land.rotation.x = 4.65;
+    land.position.y = -5;
+    
+    var box1 = new THREE.Mesh(boxG, cutesM);
+    box1.position.z = -7;
+    box1.rotation.z = box1RZ;
+    
+    scene.add(cutes, land, box1);
+    
+    function animations() {
+        
+        requestAnimationFrame(animations); 
+        
+        /*
+        if (e == 1) {
+            cameraRY += 0.01;
+        }
+        else {
+            cameraRY += 0;
+        };*/
+        
+        camera.rotation.y = cameraRY;
+        camera.position.y = cameraPY;
+        camera.rotation.x = cameraRX;
+        box1.rotation.z = box1RZ;
+        
+        gravity -= 0.000;
+        cameraPY += gravity;
+        
+        if (wee == 1){
+            cutesRY += 0.01;
+        }
+        else {
+            cutesRY -= 0.01;
+        };
+        cutes.rotation.y = cutesRY;
+        /**/renderer.render(scene, camera)
+    }
+    animations();
+    
+    
+    /**/renderer.setSize(sizes.width, sizes.height)
+    
+    
+</script> 
+    
+<script>
+   
+    document.onkeypress = lock;
+    
+    function lock(e) {
+        if(e.key == "l" || "L"){
+  screen.requestPointerLock();
+        console.log("please make it work")
+        }
+        
+}
+    function game(en) {
+        document.getElementById("label5").innerHTML = en.movementX;
+    }
+    
+    
+</script>
+    
+    
+</body>
+</html>
